@@ -1,0 +1,403 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Hero Power Card</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(124,58,237,.35), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(236,72,153,.25), transparent 30%),
+        #05010d;
+    color: white;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 440px;
+}
+
+.power-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 30px;
+    background: rgba(13,10,31,.82);
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 0 40px rgba(124,58,237,.3),
+        0 30px 80px rgba(0,0,0,.7);
+    transition: .4s;
+}
+
+.power-card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+        0 0 60px rgba(124,58,237,.45),
+        0 35px 90px rgba(0,0,0,.8);
+}
+
+.power-card::before {
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: -100px;
+    right: -80px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    filter: blur(80px);
+    opacity: .35;
+}
+
+.hero-image {
+    position: relative;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:
+        radial-gradient(circle, rgba(139,92,246,.35), transparent 45%),
+        linear-gradient(135deg,#170b36,#06050c);
+    border-bottom: 1px solid rgba(255,255,255,.1);
+}
+
+.hero-image::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 50%;
+    animation: rotate 8s linear infinite;
+}
+
+.badge {
+    position: relative;
+    z-index: 2;
+    width: 135px;
+    height: 135px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 75px;
+    font-weight: 900;
+    background: linear-gradient(145deg,#8b5cf6,#ec4899);
+    box-shadow:
+        0 0 30px rgba(139,92,246,.8),
+        0 0 90px rgba(236,72,153,.35);
+    animation: pulse 2.5s infinite;
+}
+
+.rank {
+    position: absolute;
+    z-index: 3;
+    top: 20px;
+    right: 20px;
+    padding: 8px 13px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.18);
+}
+
+.hero-info {
+    position: relative;
+    padding: 28px;
+}
+
+.hero-type {
+    color: #a78bfa;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.description {
+    color: #aaa4ba;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.power-list {
+    display: grid;
+    gap: 17px;
+}
+
+.power-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+.bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255,255,255,.08);
+}
+
+.bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg,#7c3aed,#ec4899);
+    box-shadow: 0 0 15px rgba(236,72,153,.7);
+    animation: load 1.5s ease;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    margin: 28px 0;
+    padding: 18px 0;
+    border-top: 1px solid rgba(255,255,255,.1);
+    border-bottom: 1px solid rgba(255,255,255,.1);
+}
+
+.stats div {
+    text-align: center;
+}
+
+.stats div + div {
+    border-left: 1px solid rgba(255,255,255,.1);
+}
+
+.stats strong {
+    display: block;
+    font-size: 24px;
+}
+
+.stats span {
+    display: block;
+    margin-top: 5px;
+    color: #777185;
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+button {
+    width: 100%;
+    border: none;
+    padding: 16px;
+    border-radius: 15px;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background: linear-gradient(90deg,#7c3aed,#ec4899);
+    box-shadow: 0 10px 30px rgba(139,92,246,.3);
+    transition: .3s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(236,72,153,.4);
+}
+
+button.active {
+    background: linear-gradient(90deg,#10b981,#06b6d4);
+}
+
+#powerMessage {
+    min-height: 25px;
+    margin-top: 18px;
+    text-align: center;
+    color: #a78bfa;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0%,100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.06);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load {
+    from {
+        width: 0;
+    }
+}
+
+@media (max-width:500px) {
+    body {
+        padding: 15px;
+    }
+
+    .hero-image {
+        height: 220px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .hero-info {
+        padding: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="power-card">
+
+        <div class="hero-image">
+            <div class="badge">S</div>
+            <span class="rank">LEGENDARY</span>
+        </div>
+
+        <div class="hero-info">
+
+            <p class="hero-type">SUPER HERO</p>
+
+            <h1>super hero card</h1>
+
+            <p class="description">
+                A legendary guardian with cosmic energy,
+                super speed and the ability to control
+                powerful shadows.
+            </p>
+
+            <div class="power-list">
+
+                <div class="power">
+                    <div class="power-title">
+                        <span>⚡ Super Strength</span>
+                        <span>95</span>
+                    </div>
+                    <div class="bar">
+                        <span style="width:95%"></span>
+                    </div>
+                </div>
+
+                <div class="power">
+                    <div class="power-title">
+                        <span>🔥 Energy Power</span>
+                        <span>98</span>
+                    </div>
+                    <div class="bar">
+                        <span style="width:98%"></span>
+                    </div>
+                </div>
+
+                <div class="power">
+                    <div class="power-title">
+                        <span>🌑 Shadow Control</span>
+                        <span>100</span>
+                    </div>
+                    <div class="bar">
+                        <span style="width:100%"></span>
+                    </div>
+                </div>
+
+                <div class="power">
+                    <div class="power-title">
+                        <span>💨 Speed</span>
+                        <span>92</span>
+                    </div>
+                    <div class="bar">
+                        <span style="width:92%"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="stats">
+
+                <div>
+                    <strong>98</strong>
+                    <span>POWER</span>
+                </div>
+
+                <div>
+                    <strong>96</strong>
+                    <span>DEFENSE</span>
+                </div>
+
+                <div>
+                    <strong>94</strong>
+                    <span>SPEED</span>
+                </div>
+
+            </div>
+
+            <button id="powerBtn">ACTIVATE POWER</button>
+
+        </div>
+
+    </div>
+
+    <div id="powerMessage"></div>
+
+</div>
+
+<script>
+const powerBtn = document.getElementById("powerBtn");
+const powerMessage = document.getElementById("powerMessage");
+
+let active = false;
+
+powerBtn.addEventListener("click", () => {
+    active = !active;
+
+    if (active) {
+        powerBtn.textContent = "POWER ACTIVATED";
+        powerBtn.classList.add("active");
+        powerMessage.textContent = "⚡ SHADOW NOVA POWER: 100%";
+    } else {
+        powerBtn.textContent = "ACTIVATE POWER";
+        powerBtn.classList.remove("active");
+        powerMessage.textContent = "";
+    }
+});
+</script>
+
+</body>
+</html>
+```
